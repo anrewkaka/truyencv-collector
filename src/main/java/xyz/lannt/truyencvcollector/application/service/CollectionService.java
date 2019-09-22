@@ -33,7 +33,7 @@ public class CollectionService {
             getMultiple(client, name, fromIndex, toIndex, tmpFile);
         }
 
-//        gmailClient.sendEmail(tmpFile.getPath());
+        gmailClient.sendEmail(tmpFile.getPath());
     }
 
     private String getMultiple(TruyenCvClient client, String name, int from, int to, File tmp) {
