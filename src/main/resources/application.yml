@@ -1,3 +1,21 @@
+spring:
+   mail:
+      host:smtp.gmail.com
+      port:587
+      username:username
+      password:password
+      # Other properties
+      properties:
+         mail:
+            smtp:
+               auth:true
+               connectiontimeout:5000
+               timeout:5000
+               writetimeout:5000
+               # TLS , port 587
+               starttls:
+                  enable:true
+
 # truyencv
 truyencv:
     baseUri: https://truyencv.com
