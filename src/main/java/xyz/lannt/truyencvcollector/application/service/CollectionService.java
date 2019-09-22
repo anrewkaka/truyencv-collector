@@ -5,7 +5,7 @@ import static xyz.lannt.truyencvcollector.utilities.NumberUtility.toInt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import xyz.lannt.truyencvcollector.application.client.TruyenCvClient;
+import xyz.lannt.truyencvcollector.application.client.truyencv.TruyenCvClient;
 import xyz.lannt.truyencvcollector.application.properties.TruyenCvProperty;
 
 @Service

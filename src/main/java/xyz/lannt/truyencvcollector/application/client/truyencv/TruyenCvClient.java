@@ -1,4 +1,4 @@
-package xyz.lannt.truyencvcollector.application.client;
+package xyz.lannt.truyencvcollector.application.client.truyencv;
 
 import java.io.BufferedReader;
 import java.io.IOException;
