@@ -1,0 +1,6 @@
+# truyencv
+truyencv:
+    baseUri: https://truyencv.com
+    titlePath: div#js-truyencv-read-content div.header h2
+    contentPath: div#js-truyencv-content
+    chapterPrefix: chuong-

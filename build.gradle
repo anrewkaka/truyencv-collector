@@ -2,6 +2,7 @@ plugins {
 	id 'org.springframework.boot' version '2.1.8.RELEASE'
 	id 'io.spring.dependency-management' version '1.0.8.RELEASE'
 	id 'java'
+	id 'eclipse'
 }
 
 group = 'xyz.lannt'
@@ -13,6 +14,13 @@ repositories {
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter'
+	implementation (
+	    'org.springframework.boot:spring-boot-starter-web',
+	    'org.apache.httpcomponents:httpclient:4.5.8',
+        'com.google.code.gson:gson:2.8.5',
+        'org.apache.commons:commons-lang3:3.9',
+        'org.projectlombok:lombok:1.16.18',
+        'org.jsoup:jsoup:1.8.3',
+	)
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
