@@ -2,9 +2,13 @@ package xyz.lannt.truyencvcollector.application.service;
 
 import static xyz.lannt.truyencvcollector.utilities.NumberUtility.toInt;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import xyz.lannt.truyencvcollector.application.client.gmail.GmailClient;
 import xyz.lannt.truyencvcollector.application.client.truyencv.TruyenCvClient;
 import xyz.lannt.truyencvcollector.application.properties.TruyenCvProperty;
 
@@ -13,26 +17,37 @@ public class CollectionService {
 
     @Autowired
     private TruyenCvProperty truyenCvProperty;
+    @Autowired
+    private TempFileService tempFileService;
+    @Autowired
+    private GmailClient gmailClient;
 
-    public String get(String name, String from, String to) {
+    public void get(String name, String from, String to) {
         int fromIndex = toInt(from);
         int toIndex = toInt(to);
+        String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHMMSS"));
         TruyenCvClient client = new TruyenCvClient(truyenCvProperty);
 
+        String tmpFile = "";
         if (toIndex == 0) {
-            return client.request(name, from);
+            tmpFile = tempFileService.saveTmpFile(name + "_" + from, client.request(name, from), timestamp);
+        } else {
+            tmpFile = getMultiple(client, name, fromIndex, toIndex, timestamp);
         }
 
-        return getMultiple(client, name, fromIndex, toIndex);
+        gmailClient.sendEmail(tmpFile);
     }
 
-    private String getMultiple(TruyenCvClient client, String name, int from, int to) {
-        StringBuffer sb = new StringBuffer("");
+    private String getMultiple(TruyenCvClient client, String name, int from, int to, String timestamp) {
+        String filePath = "";
         for (int chapter = from; chapter <= to; chapter++) {
+            StringBuffer sb = new StringBuffer();
             sb.append(client.request(name, Integer.toString(chapter)));
             sb.append(System.lineSeparator());
             sb.append(System.lineSeparator());
             sb.append(System.lineSeparator());
+
+            filePath = tempFileService.saveTmpFile(name + "_" + from + "-" + to, sb.toString(), timestamp);
             try {
                 Thread.sleep(5000);
             } catch (InterruptedException e) {
@@ -40,6 +55,6 @@ public class CollectionService {
             }
         }
 
-        return sb.toString();
+        return filePath;
     }
 }
