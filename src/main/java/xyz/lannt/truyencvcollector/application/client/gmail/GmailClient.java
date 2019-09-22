@@ -1,6 +1,8 @@
 package xyz.lannt.truyencvcollector.application.client.gmail;
 
 import java.io.File;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -31,7 +33,12 @@ public class GmailClient {
             File attaching = new File(filePath);
             helper.setSubject(attaching.getName());
             helper.setText("Hello");
-            helper.addAttachment(attaching.getName(), attaching);
+
+            String attachmentName = attaching.getName();
+            Pattern p = Pattern.compile("_[\\d]*.txt");
+            Matcher m = p.matcher(attachmentName);
+
+            helper.addAttachment(m.replaceAll(".txt"), attaching);
 
             javaMailSender.send(msg);
         } catch (MessagingException e) {

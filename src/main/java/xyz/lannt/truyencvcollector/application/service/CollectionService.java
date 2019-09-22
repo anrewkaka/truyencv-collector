@@ -2,8 +2,7 @@ package xyz.lannt.truyencvcollector.application.service;
 
 import static xyz.lannt.truyencvcollector.utilities.NumberUtility.toInt;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.io.File;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,20 +24,19 @@ public class CollectionService {
     public void get(String name, String from, String to) {
         int fromIndex = toInt(from);
         int toIndex = toInt(to);
-        String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHMMSS"));
         TruyenCvClient client = new TruyenCvClient(truyenCvProperty);
 
-        String tmpFile = "";
+        File tmpFile = tempFileService.create(name + "_" + from + (toIndex == 0 ? "" : "-" + to));
         if (toIndex == 0) {
-            tmpFile = tempFileService.saveTmpFile(name + "_" + from, client.request(name, from), timestamp);
+            tempFileService.write(tmpFile, client.request(name, from));
         } else {
-            tmpFile = getMultiple(client, name, fromIndex, toIndex, timestamp);
+            getMultiple(client, name, fromIndex, toIndex, tmpFile);
         }
 
-        gmailClient.sendEmail(tmpFile);
+        gmailClient.sendEmail(tmpFile.getPath());
     }
 
-    private String getMultiple(TruyenCvClient client, String name, int from, int to, String timestamp) {
+    private String getMultiple(TruyenCvClient client, String name, int from, int to, File tmp) {
         String filePath = "";
         for (int chapter = from; chapter <= to; chapter++) {
             StringBuffer sb = new StringBuffer();
@@ -47,7 +45,7 @@ public class CollectionService {
             sb.append(System.lineSeparator());
             sb.append(System.lineSeparator());
 
-            filePath = tempFileService.saveTmpFile(name + "_" + from + "-" + to, sb.toString(), timestamp);
+            tempFileService.write(tmp, sb.toString());
             try {
                 Thread.sleep(5000);
             } catch (InterruptedException e) {

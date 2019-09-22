@@ -10,21 +10,25 @@ import org.springframework.stereotype.Service;
 @Service
 public class TempFileService {
 
-    public String saveTmpFile(String name, String content, String timestamp) {
+    public File create(String name) {
+        // create a temp file
         try {
-            // create a temp file
-            File temp = File.createTempFile(name + "_" + timestamp, ".txt");
+            return File.createTempFile(name, ".txt");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
+    public void write(File temp, String content) {
+        try {
             // write it
             BufferedWriter bw = new BufferedWriter(new FileWriter(temp, true));
             bw.write(content);
             bw.close();
 
-            return temp.getPath();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        return "";
     }
 }
