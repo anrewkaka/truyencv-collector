@@ -5,7 +5,9 @@ import java.util.Optional;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Document.OutputSettings;
 import org.jsoup.nodes.Element;
+import org.jsoup.safety.Whitelist;
 import org.jsoup.select.Selector.SelectorParseException;
 
 import lombok.AllArgsConstructor;
@@ -32,12 +34,14 @@ public class TruyenCvClient {
             // get chapter title
             Optional<String> title = doc.select(property.getTitlePath()).stream().map(Element::text)
                     .reduce((e1, e2) -> e1.concat(e2));
-            Optional<String> content = doc.select(property.getContentPath()).stream().map(Element::text)
-                    .reduce((e1, e2) -> e1.concat(e2));
+            String tmpContent = doc.select(property.getContentPath()).toString();
+            OutputSettings settings = new OutputSettings();
+            settings.prettyPrint(false);
+            String content = Jsoup.clean(tmpContent, "", Whitelist.none(), settings);
 
             result.append(title.orElse(""));
             result.append(System.lineSeparator());
-            result.append(content.orElse(""));
+            result.append(content);
         } catch (SelectorParseException ex) {
             throw new TruyenCvClientException(ex);
         }

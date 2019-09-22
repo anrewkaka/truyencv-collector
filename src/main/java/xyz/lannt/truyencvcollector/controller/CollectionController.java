@@ -16,8 +16,8 @@ public class CollectionController {
     private CollectionService collectionService;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String get(@RequestParam(required = true) String name, @RequestParam(required = true) String from,
-            @RequestParam String to) {
+    public String get(@RequestParam String name, @RequestParam String from,
+            @RequestParam(required = false) String to) {
         collectionService.get(name, from, to);
         return "OK!";
     }
