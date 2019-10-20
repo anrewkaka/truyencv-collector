@@ -1,3 +1,13 @@
+buildscript {
+  repositories {
+    mavenCentral()
+  }
+
+  dependencies {
+    classpath 'com.google.cloud.tools:appengine-gradle-plugin:2.1.0'
+  }
+}
+
 plugins {
     id 'org.springframework.boot' version '2.1.8.RELEASE'
     id 'io.spring.dependency-management' version '1.0.8.RELEASE'
@@ -5,23 +15,40 @@ plugins {
     id 'eclipse'
 }
 
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'com.google.cloud.tools.appengine-flexible'
+
 group = 'xyz.lannt'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '1.8'
+tasks.withType(JavaCompile) { options.encoding = 'UTF-8' }
 
 repositories {
     mavenCentral()
+    maven {
+        url 'https://maven-central.storage.googleapis.com'
+    }
 }
 
 dependencies {
-    implementation (
+    compile (
         'org.springframework.boot:spring-boot-starter-web',
         'org.springframework.boot:spring-boot-starter-mail',
         'org.apache.httpcomponents:httpclient:4.5.8',
         'com.google.code.gson:gson:2.8.5',
         'org.apache.commons:commons-lang3:3.9',
-        'org.projectlombok:lombok:1.16.18',
+        'org.projectlombok:lombok:1.18.10',
         'org.jsoup:jsoup:1.8.3',
+        'com.google.appengine:appengine-api-1.0-sdk:1.9.76',
     )
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    annotationProcessor 'org.projectlombok:lombok:1.18.10'
+    testCompile 'org.springframework.boot:spring-boot-starter-test'
+}
+
+appengine {
+    deploy {
+        version = 4
+        projectId = "GCLOUD_CONFIG"
+    }
 }
