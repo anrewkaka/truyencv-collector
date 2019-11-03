@@ -2,8 +2,10 @@ package xyz.lannt.truyencvcollector.application.service;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 
 import org.springframework.stereotype.Service;
 
@@ -23,7 +25,8 @@ public class TempFileService {
     public void write(File temp, String content) {
         try {
             // write it
-            BufferedWriter bw = new BufferedWriter(new FileWriter(temp, true));
+            BufferedWriter bw = new BufferedWriter(
+                    new OutputStreamWriter(new FileOutputStream(temp, true), StandardCharsets.UTF_8));
             bw.write(content);
             bw.close();
 
