@@ -8,7 +8,7 @@ USER root
 RUN chown -R gradle /home/gradle/project
 USER gradle
 
-RUN gradle clean build -x checkstyleTest
+RUN gradle clean build
 
 ### STAGE 2: Production Environment ###
 FROM openjdk:8u262-jdk
@@ -22,4 +22,4 @@ EXPOSE 443
 
 ENV SPRING_CONFIG_LOCATION=
 
-CMD ["java", "-jar", "/usr/app/truyencv-collector.jar"]
+CMD ["java", "-jar", "/usr/app/truyencv-collector-0.0.1-SNAPSHOT.jar"]
