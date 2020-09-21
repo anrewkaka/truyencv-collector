@@ -1,0 +1,15 @@
+version: "3.8"
+
+services:
+  truyencv-collector:
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile
+    image: truyencv-collector:latest
+    container_name: truyencv-collector
+    ports:
+      - '9099:8080'
+    environment:
+      - SPRING_CONFIG_LOCATION='/usr/app/application.yml'
+    volumes:
+      - ./conf/application.yml:/usr/app/application.yml
