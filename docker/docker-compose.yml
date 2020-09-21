@@ -2,10 +2,7 @@ version: "3.8"
 
 services:
   truyencv-collector:
-    build:
-      context: ../
-      dockerfile: docker/Dockerfile
-    image: truyencv-collector:latest
+    image: lanntxyz/truyencv-collector:latest
     container_name: truyencv-collector
     ports:
       - '9099:8080'
@@ -13,3 +10,4 @@ services:
       - SPRING_CONFIG_LOCATION='/usr/app/application.yml'
     volumes:
       - ./conf/application.yml:/usr/app/application.yml
+    command: ["java", "-jar", "/usr/app/truyencv-collector-0.0.1-SNAPSHOT.jar", "--spring.config.location=/usr/app/application.yml"]
